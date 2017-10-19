@@ -8,9 +8,9 @@ class AssetsLoader {
 
     loadImages(paths) {
         return new Promise((resolve, reject) => {
-            var imagePromises = [];
-            for (var i = 0; i < paths.length; i++) {
-                var path = paths[i];
+            let imagePromises = [];
+            for (let i = 0; i < paths.length; i++) {
+                let path = paths[i];
                 imagePromises.push(this.load(path, "blob"));
             }
             Promise.all(imagePromises).then(() => resolve(this.data), reject);
@@ -18,7 +18,7 @@ class AssetsLoader {
     }
 
     load(path, responseType = "") {
-        var req = new XMLHttpRequest();
+        let req = new XMLHttpRequest();
         this.data[path] = req;
         return new Promise(function(resolve, reject) {
             req.open('GET', path);

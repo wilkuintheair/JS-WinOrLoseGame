@@ -1,33 +1,38 @@
 (function () {
-    var data = {};
-    var assetsLoader = new AssetsLoader();
+    let data = {};
+    let assetsLoader = new AssetsLoader();
 
     function startGame(images) {
-        var canvas = document.getElementById("gameArea");
-        var game = new Game(canvas, images);
+        let canvas = document.getElementById("gameArea");
+        let game = new Game(canvas, images);
         game.start();
     }
 
     function loadAssets() {
-        var paths = ["img/Bet_Line.png", "img/BG.png", "img/BTN_Spin_d.png", "img/BTN_Spin.png"];
-        for (var i = 0; i < data.symbols.length; i++) {
-            var symbol = data.symbols[i];
+        let paths = ["img/Bet_Line.png", "img/BG.png", "img/BTN_Spin_d.png", "img/BTN_Spin.png"];
+        for (let i = 0; i < data.symbols.length; i++) {
+            let symbol = data.symbols[i];
             paths.push(symbol.src);
         }
         assetsLoader.loadImages(paths).then((response) => {
-            var images = [];
-            for (var i = 0; i < data.symbols.length; i++) {
-                var path = data.symbols[i].src;
-                images[i] = getImage(response[path]);
+            let promises = [];
+            for (let i = 0; i < data.symbols.length; i++) {
+                let path = data.symbols[i].src;
+                promises[i] = getImage(response[path]);
             }
-            startGame(images);
+            Promise.all(promises).then((images)=> {
+                startGame(images);
+            });
         });
     }
 
     function getImage(request) {
-        var img = new Image();
-        img.src = window.URL.createObjectURL(request.response);
-        return img;
+        return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = window.URL.createObjectURL(request.response);
+        });
     }
 
     assetsLoader.load("data/data.json").then((response) => {
