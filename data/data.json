@@ -1,0 +1,28 @@
+{
+  "symbols": [
+    {
+      "src": "img/SYM1.png",
+      "chance": "0.4"
+    },
+    {
+      "src": "img/SYM3.png",
+      "chance": "1"
+    },
+    {
+      "src": "img/SYM4.png",
+      "chance": "1"
+    },
+    {
+      "src": "img/SYM5.png",
+      "chance": "1"
+    },
+    {
+      "src": "img/SYM6.png",
+      "chance": "1"
+    },
+    {
+      "src": "img/SYM7.png",
+      "chance": "1"
+    }
+  ]
+}
