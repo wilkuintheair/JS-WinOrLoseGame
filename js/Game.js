@@ -6,16 +6,21 @@ class Game {
         this.images = images;
         this.context = canvas.getContext("2d");
         this.container = new DisplayObjectContainer(this.context);
+        this.frame = 0;
+        this.animateColumns = false;
         this.setupUI(ui);
         this.setupImages(images);
+        this.canvas.addEventListener("click", (event) => {
+            this.container.click(event.clientX, event.clientY);
+        });
     }
 
     setupUI(ui) {
-        this.container.addChild(new ImageDisplayObject(this.context, ui.background));
-        this.spinButton = new ImageDisplayObject(this.context, ui.spinButtonDisabled);
-        this.spinButton.x = 824;
-        this.spinButton.y = 218;
-        this.container.addChild(this.spinButton);
+        this.container.addChild(ui);
+        ui.spinButton.onclick = () => {
+            this.animateColumns = !this.animateColumns;
+            ui.spinButtonEnabled = !ui.spinButtonEnabled;
+        }
     }
 
     setupImages(images) {
@@ -56,13 +61,14 @@ class Game {
         container.addChild(imageDisplayObject);
     }
 
-    start() {
+    initialize() {
         setInterval(() => {
             this.gameLoop.apply(this);
         }, this.FPS);
     }
 
     gameLoop() {
+        this.frame++;
         this.clear();
         this.update();
         this.draw();
@@ -73,9 +79,11 @@ class Game {
     }
 
     update() {
-        this.column1.y -= 20;
-        this.column2.y -= 20;
-        this.column3.y -= 20;
+        if (this.animateColumns) {
+            this.column1.y -= 20;
+            this.column2.y -= 20;
+            this.column3.y -= 20;
+        }
         this.container.update();
     }
 
@@ -84,12 +92,20 @@ class Game {
     }
 }
 
-class GameUI {
-    constructor(background, betLine, spinButton, spinButtonDisabled) {
-        this._background = background;
-        this._betLine = betLine;
-        this._spinButton = spinButton;
-        this._spinButtonDisabled = spinButtonDisabled;
+class GameUI extends DisplayObjectContainer {
+    constructor(context, background, betLine, spinButtonDefault, spinButtonDisabled) {
+        super(context);
+        this._background = new ImageDisplayObject(context, background);
+        this._betLine = new ImageDisplayObject(context, betLine);
+        this._spinButtonDefault = new ImageDisplayObject(context, spinButtonDefault);
+        this._spinButtonDisabled = new ImageDisplayObject(context, spinButtonDisabled)
+        this._spinButton = new DisplayObjectContainer(context);
+        this._spinButtonEnabled = false;
+        this.spinButton.x = 824;
+        this.spinButton.y = 218;
+        this.spinButton.addChild(this._spinButtonDisabled);
+        this.addChild(this.background);
+        this.addChild(this.spinButton);
     }
 
     get background() {
@@ -103,7 +119,19 @@ class GameUI {
     get spinButton() {
         return this._spinButton;
     }
-    get spinButtonDisabled() {
-        return this._spinButtonDisabled;
+
+    get spinButtonEnabled() {
+        return this._spinButtonEnabled;
+    }
+
+    set spinButtonEnabled(value) {
+        if (value && !this.spinButtonEnabled) {
+            this.spinButton.removeChild(this._spinButtonDisabled);
+            this.spinButton.addChild(this._spinButtonDefault);
+        } else if (!value && this.spinButtonEnabled) {
+            this.spinButton.removeChild(this._spinButtonDefault);
+            this.spinButton.addChild(this._spinButtonDisabled);
+        }
+        this._spinButtonEnabled = value;
     }
 }

@@ -1,16 +1,17 @@
 (function () {
     let data = {};
     let assetsLoader = new AssetsLoader();
+    let canvas = document.getElementById("gameArea");
+    let context = canvas.getContext("2d");
 
     assetsLoader.load("data/data.json").then((response) => {
         data = JSON.parse(response);
         loadAssets();
     });
 
-    function startGame(images, ui) {
-        let canvas = document.getElementById("gameArea");
+    function initializeGame(images, ui) {
         let game = new Game(canvas, ui, images);
-        game.start();
+        game.initialize();
     }
 
     function loadAssets() {
@@ -21,7 +22,8 @@
         let paths = [background, betLine, spinButton, spinButtonDisabled];
 
         assetsLoader.loadImages(paths).then(images => {
-            let ui = new GameUI(assetsLoader.images[background],
+            let ui = new GameUI(context,
+                assetsLoader.images[background],
                 assetsLoader.images[betLine],
                 assetsLoader.images[spinButton],
                 assetsLoader.images[spinButtonDisabled]);
@@ -30,7 +32,7 @@
                 let symbol = data.symbols[i];
                 paths.push(symbol.src);
             }
-            assetsLoader.loadImages(paths).then(images => startGame(images, ui));
+            assetsLoader.loadImages(paths).then(images => initializeGame(images, ui));
         });
     }
 })();
