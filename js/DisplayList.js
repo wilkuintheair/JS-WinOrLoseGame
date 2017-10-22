@@ -39,6 +39,10 @@ class DisplayObjectContainer extends DisplayObject {
         this.displayList = [];
     }
 
+    get numChildren() {
+        return this.displayList.length;
+    }
+
     draw() {
         super.draw();
         for (let i = 0; i < this.displayList.length; i++) {
