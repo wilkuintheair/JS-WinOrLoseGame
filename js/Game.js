@@ -98,7 +98,7 @@ class GameUI extends DisplayObjectContainer {
         this._background = new ImageDisplayObject(context, background);
         this._betLine = new ImageDisplayObject(context, betLine);
         this._spinButtonDefault = new ImageDisplayObject(context, spinButtonDefault);
-        this._spinButtonDisabled = new ImageDisplayObject(context, spinButtonDisabled)
+        this._spinButtonDisabled = new ImageDisplayObject(context, spinButtonDisabled);
         this._spinButton = new DisplayObjectContainer(context);
         this._spinButtonEnabled = false;
         this.spinButton.x = 824;
