@@ -1,16 +1,43 @@
 (function () {
     let data = {};
     let assetsLoader = new AssetsLoader();
-    let canvas = document.getElementById("gameArea");
-    let context = canvas.getContext("2d");
+    let canvas = undefined;
+    let selectedIndex = 0;
 
     assetsLoader.load("data/data.json").then((response) => {
         data = JSON.parse(response);
-        loadAssets();
+        createSelect(data.symbols);
     });
 
+    function createSelect(array) {
+        let selectList = document.createElement("select");
+        selectList.id = "mySelect";
+        document.body.appendChild(selectList);
+        selectList.onchange = () => {
+            document.body.removeChild(selectList);
+            selectedIndex = selectList.selectedIndex;
+            createCanvas();
+            loadAssets();
+        };
+
+        for (let i = 0; i < array.length; i++) {
+            let option = document.createElement("option");
+            option.value = array[i].chance;
+            option.text = array[i].src;
+            selectList.appendChild(option);
+        }
+    }
+
+    function createCanvas() {
+        canvas = document.createElement("canvas");
+        canvas.width = 960;
+        canvas.height = 536;
+        document.body.appendChild(canvas);
+    }
+
     function initializeGame(images, ui) {
-        let game = new Game(canvas, ui, images, 3, .3);
+        let chance = data.symbols[selectedIndex].chance;
+        let game = new Game(canvas, ui, images, selectedIndex, chance);
         game.initialize();
     }
 
@@ -22,7 +49,7 @@
         let paths = [background, betLine, spinButton, spinButtonDisabled];
 
         assetsLoader.loadImages(paths).then(images => {
-            let ui = new GameUI(context,
+            let ui = new GameUI(canvas.getContext("2d"),
                 assetsLoader.images[background],
                 assetsLoader.images[betLine],
                 assetsLoader.images[spinButton],
