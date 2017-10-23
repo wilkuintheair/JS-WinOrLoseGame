@@ -14,15 +14,20 @@
         selectList.id = "mySelect";
         document.body.appendChild(selectList);
         selectList.onchange = () => {
-            document.body.removeChild(selectList);
-            selectedIndex = selectList.selectedIndex;
-            createCanvas();
-            loadAssets();
+            if (selectList.selectedIndex > 0) {
+                document.body.removeChild(selectList);
+                selectedIndex = selectList.selectedIndex - 1;
+                createCanvas();
+                loadAssets();
+            }
         };
+
+        let option = document.createElement("option");
+        option.text = "Choose element";
+        selectList.appendChild(option);
 
         for (let i = 0; i < array.length; i++) {
             let option = document.createElement("option");
-            option.value = array[i].chance;
             option.text = array[i].src;
             selectList.appendChild(option);
         }
