@@ -56,7 +56,7 @@ class Game {
         this.addImage(container, this.images[startPattern[0]]);
         this.addImage(container, this.images[startPattern[1]]);
         this.addImage(container, this.images[startPattern[2]]);
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 15; i++) {
             let random = Math.floor(Math.random() * this.images.length);
             let image = this.images[random];
             this.addImage(container, image);
@@ -112,9 +112,9 @@ class Game {
     update() {
         let minY = this.canvas.height - this.column1.height - 20;
         if (this.animateColumns) {
-            this.column1.y -= 50;
-            this.column2.y -= 50;
-            this.column3.y -= 50;
+            this.column1.y -= 40;
+            this.column2.y -= 40;
+            this.column3.y -= 40;
         }
         if (this.animateColumns && this.column1.y < minY) {
             this.animateColumns = false;
