@@ -2,27 +2,27 @@
   "symbols": [
     {
       "src": "img/SYM1.png",
-      "chance": "0.4"
+      "chance": "0.05"
     },
     {
       "src": "img/SYM3.png",
-      "chance": "1"
+      "chance": "0.5"
     },
     {
       "src": "img/SYM4.png",
-      "chance": "1"
+      "chance": "0.6"
     },
     {
       "src": "img/SYM5.png",
-      "chance": "1"
+      "chance": "0.3"
     },
     {
       "src": "img/SYM6.png",
-      "chance": "1"
+      "chance": "0.2"
     },
     {
       "src": "img/SYM7.png",
-      "chance": "1"
+      "chance": "0.1"
     }
   ]
 }
