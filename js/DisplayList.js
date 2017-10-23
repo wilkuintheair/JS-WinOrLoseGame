@@ -182,7 +182,13 @@ class DisplayObjectContainer extends DisplayObject {
     }
 
     removeChild(child) {
-        child.parent = undefined;
-        this.displayList.splice(this.displayList.indexOf(child), 1);
+        if (this.hasChild(child)) {
+            child.parent = undefined;
+            this.displayList.splice(this.displayList.indexOf(child), 1);
+        }
+    }
+
+    hasChild(child) {
+        return this.displayList.indexOf(child) > -1;
     }
 }

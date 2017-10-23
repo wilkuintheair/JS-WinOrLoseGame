@@ -10,7 +10,7 @@
     });
 
     function initializeGame(images, ui) {
-        let game = new Game(canvas, ui, images);
+        let game = new Game(canvas, ui, images, 3, .3);
         game.initialize();
     }
 

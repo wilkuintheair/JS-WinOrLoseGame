@@ -1,21 +1,26 @@
 class Game {
-    constructor(canvas, ui, images) {
+    constructor(canvas, ui, images, winIndex, winChance) {
         this.FPS = 1000 / 60;
         this.canvas = canvas;
         this.ui = ui;
         this.images = images;
+        this.winChance = winChance;
         this.context = canvas.getContext("2d");
         this.container = new DisplayObjectContainer(this.context);
         this.frame = 0;
         this.animateColumns = false;
-        this.patternGenerator = new PatternHelper(0, images.length, 3, 3);
+        this.patternGenerator = new PatternHelper(winIndex, images.length, 3, 3);
         this.startPattern = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
-        this.finishPattern = this.patternGenerator.getRandomPattern();
+        this.finishPattern = this.getFinishPattern();
         this.setupUI(ui);
         this.createColumns(images);
         this.canvas.addEventListener("click", (event) => {
             this.container.click(event.clientX, event.clientY);
         });
+    }
+
+    getFinishPattern() {
+        return Math.random() < this.winChance ? this.patternGenerator.getWinPattern() : this.patternGenerator.getLosePattern();
     }
 
     setupUI(ui) {
@@ -80,7 +85,7 @@ class Game {
     reset() {
         this.ui.spinButtonEnabled = true;
         this.startPattern = this.finishPattern;
-        this.finishPattern = this.patternGenerator.getWinPattern();
+        this.finishPattern = this.getFinishPattern();
         this.container.removeChild(this.column1);
         this.container.removeChild(this.column2);
         this.container.removeChild(this.column3);
@@ -90,6 +95,7 @@ class Game {
     start() {
         this.animateColumns = true;
         this.ui.spinButtonEnabled = false;
+        this.container.removeChild(this.ui.betLine);
     }
 
     gameLoop() {
@@ -116,6 +122,9 @@ class Game {
             this.column2.y = minY;
             this.column3.y = minY;
             this.reset();
+            if (this.patternGenerator.isWinPattern(this.startPattern)) {
+                this.container.addChild(this.ui.betLine);
+            }
         }
         this.container.update();
     }
@@ -130,6 +139,8 @@ class GameUI extends DisplayObjectContainer {
         super(context);
         this._background = new ImageDisplayObject(context, background);
         this._betLine = new ImageDisplayObject(context, betLine);
+        this._betLine.x = 40;
+        this._betLine.y = 260;
         this._spinButtonDefault = new ImageDisplayObject(context, spinButtonDefault);
         this._spinButtonDisabled = new ImageDisplayObject(context, spinButtonDisabled);
         this._spinButton = new DisplayObjectContainer(context);
